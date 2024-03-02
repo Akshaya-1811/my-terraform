@@ -66,3 +66,15 @@ resource "aws_route_table" "my-db-rt" {
     Name = "db-rt"
   }
 }
+
+#WEB-RT-ASSC
+resource "aws_route_table_association" "a" {
+  subnet_id      = aws_subnet.my-web-sn.id
+  route_table_id = aws_route_table.my-web-rt.id
+}
+
+#DB-RT-ASSC
+resource "aws_route_table_association" "b" {
+  subnet_id      = aws_subnet.my-db-sn.id
+  route_table_id = aws_route_table.my-db-rt.id
+}
