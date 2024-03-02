@@ -147,42 +147,64 @@ resource "aws_network_acl_association" "d" {
 
 #WEB-SG
 resource "aws_security_group" "my-web-sg" {
-  name        = "allow_tls"
-  description = "Allow SSH - HTTP outbound traffic"
+  name        = "my-web-traffic"
+  description = "Allow SSH - HTTP inbound traffic"
   vpc_id      = aws_vpc.my-vpc.id
+
+  ingress {
+    description = "SSH from WWW"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  ingress {
+    description = "HTTP from WWW"
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 
   tags = {
     Name = "web-sg"
   }
 }
-  ingress {
-    protocol   = "SSH"
-    rule_no    = 100
-    cidr_block = "0.0.0.0/0"
-    from_port  = 22
-    to_port    = 22
-  }
 
-  ingress {
-    protocol   = "HTTP"
-    rule_no    = 100
-    cidr_block = "0.0.0.0/0"
-    from_port  = 80
-    to_port    = 80
-  }
-
-egress {
-    protocol   = "-1"
-    rule_no    = 100
-    action     = "allow"
-    cidr_block = "0.0.0.0/0"
-    from_port  = 0
-    to_port    = 65535
-  }
-
-
-tags = {
-    Name = "db-sg"
-
-}
 #DB-SG
+resource "aws_security_group" "my-db-sg" {
+  name        = "my-db-traffic"
+  description = "Allow SSH - Postgres inbound traffic"
+  vpc_id      = aws_vpc.my-vpc.id
+
+  ingress {
+    description = "SSH from WWW"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["10.0.0.0/16"]
+  }
+  ingress {
+    description = "Postgres from WWW"
+    from_port   = 5432
+    to_port     = 5432
+    protocol    = "tcp"
+    cidr_blocks = ["10.0.0.0/16"]
+  }
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "db-sg"
+  }
+}
