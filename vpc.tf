@@ -146,4 +146,43 @@ resource "aws_network_acl_association" "d" {
 }
 
 #WEB-SG
+resource "aws_security_group" "my-web-sg" {
+  name        = "allow_tls"
+  description = "Allow SSH - HTTP outbound traffic"
+  vpc_id      = aws_vpc.my-vpc.id
+
+  tags = {
+    Name = "web-sg"
+  }
+}
+  ingress {
+    protocol   = "SSH"
+    rule_no    = 100
+    cidr_block = "0.0.0.0/0"
+    from_port  = 22
+    to_port    = 22
+  }
+
+  ingress {
+    protocol   = "HTTP"
+    rule_no    = 100
+    cidr_block = "0.0.0.0/0"
+    from_port  = 80
+    to_port    = 80
+  }
+
+egress {
+    protocol   = "-1"
+    rule_no    = 100
+    action     = "allow"
+    cidr_block = "0.0.0.0/0"
+    from_port  = 0
+    to_port    = 65535
+  }
+
+
+tags = {
+    Name = "db-sg"
+
+}
 #DB-SG
