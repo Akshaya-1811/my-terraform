@@ -28,3 +28,12 @@ resource "aws_subnet" "my-db-sn" {
     Name = "db-sn"
   }
 }
+
+#INTERNET-GATEWAY
+resource "aws_internet_gateway" "my-igw" {
+  vpc_id = aws_vpc.my-vpc.id
+
+  tags = {
+    Name = "my-igw"
+  }
+}
