@@ -133,5 +133,17 @@ resource "aws_network_acl" "my-db-nacl" {
   }
 }
 
+#WEB-NACL-ASSC
+resource "aws_network_acl_association" "c" {
+  network_acl_id = aws_network_acl.my-web-nacl.id
+  subnet_id      = aws_subnet.my-web-sn.id
+}
+
+#DB-NACL-ASSC
+resource "aws_network_acl_association" "d" {
+  network_acl_id = aws_network_acl.my-db-nacl.id
+  subnet_id      = aws_subnet.my-db-sn.id
+}
+
 #WEB-SG
 #DB-SG
