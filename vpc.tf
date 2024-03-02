@@ -37,3 +37,32 @@ resource "aws_internet_gateway" "my-igw" {
     Name = "my-igw"
   }
 }
+
+#WEB-RT
+resource "aws_route_table" "my-web-rt" {
+  vpc_id = aws_vpc.my-vpc.id
+
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.my-igw.id
+  }
+
+
+  tags = {
+    Name = "web-rt"
+  }
+}
+
+#DB-RT
+resource "aws_route_table" "my-db-rt" {
+  vpc_id = aws_vpc.my-vpc.id
+
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.my-igw.id
+  }
+
+  tags = {
+    Name = "db-rt"
+  }
+}
